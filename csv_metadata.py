@@ -45,18 +45,21 @@ with open(output_file, "w") as out:
             # Read one row to infer the data types of each column
             sample_row = next(reader)
 
-            # Infer the data type of each column
+            # Infer the data type of each column and write it to the output file
+            col_types = []
             for i, value in enumerate(sample_row):
                 if value == '':
-                    out.write(f"  - {type(None)}\n")
+                    col_type = type(None)
                 else:
                     try:
-                        out.write(f"  - {type(int(value))}\n")
+                        col_type = type(int(value))
                     except ValueError:
                         try:
-                            out.write(f"  - {type(float(value))}\n")
+                            col_type = type(float(value))
                         except ValueError:
-                            out.write(f"  - {type(value)}\n")
+                            col_type = type(value)
+                col_types.append(col_type)
+                out.write(f"  - {headers[i]}: {col_type}\n")
 
             # Add a blank line after the metadata for each file
             out.write("\n")
